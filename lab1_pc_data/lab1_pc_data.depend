@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1729093406 source:d:\магистатура_1_курс\Параллельное программирование\lab1_pc_data\cluster.cpp
+	"cluster.h"
+	<algorithm>
+
+1729093966 d:\магистатура_1_курс\Параллельное программирование\lab1_pc_data\cluster.h
+	<vector>
+	<string>
+	<iostream>
+	<fstream>
+
+1729091309 source:d:\магистатура_1_курс\Параллельное программирование\lab1_pc_data\main.cpp
+	"cluster.h"
+	<iostream>
+	<fstream>
+

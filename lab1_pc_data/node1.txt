@@ -1,0 +1,21 @@
+ClusterNode
+1
+CpuSpec
+Intel Core i9
+8
+3.6
+16
+16
+x86_64
+GpuSpec
+NVIDIA GeForce RTX 3080
+10
+1.44
+GDDR6X
+8704
+320
+RamSpec
+32
+3200
+LanSpec
+1000

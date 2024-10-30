@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1729166171 source:c:\users\lunev\desktop\�������� �.�\lab2\main.cpp
+	<iostream>
+	<cstdlib>
+	<ctime>
+	"Matrix.h"
+
+1729124346 c:\users\lunev\desktop\�������� �.�\lab2\matrix.h
+	<iostream>
+	<stdexcept>
+	<fstream>
+	<string>
+
+1729124177 source:c:\users\lunev\desktop\�������� �.�\lab2\matrix.cpp
+
+1729181976 source:d:\магистатура_1_курс\Параллельное программирование\lab2\main.cpp
+	<iostream>
+	<cstdlib>
+	<ctime>
+	<fstream>
+	"Matrix.h"
+
+1729181924 d:\магистатура_1_курс\Параллельное программирование\lab2\matrix.h
+	<iostream>
+	<stdexcept>
+	<fstream>
+	<string>
+
+1729181949 source:d:\магистатура_1_курс\Параллельное программирование\lab2\matrix.cpp
+	"Matrix.h"
+

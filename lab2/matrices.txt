@@ -1,0 +1,39 @@
+Matrix A:
+44 80 29
+2 33 46
+7 53 91
+
+Matrix B:
+9 55 81
+53 10 48
+87 86 63
+
+Scaled matrix A (multiplied by 2.500000):
+110 200 72.5
+5 82.5 115
+17.5 132.5 227.5
+
+Element-wise multiplication of A and B:
+396 4400 2349
+106 330 2208
+609 4558 5733
+
+Matrix multiplication of A and B:
+7159 5714 9231
+5769 4396 4644
+10789 8741 8844
+
+Matrix addition of A and B:
+53 135 110
+55 43 94
+94 139 154
+
+Matrix subtraction of A and B:
+35 25 -52
+-51 23 -2
+-80 -33 28
+
+Transpose of matrix A:
+44 2 7
+80 33 53
+29 46 91

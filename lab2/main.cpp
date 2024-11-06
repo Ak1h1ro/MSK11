@@ -3,6 +3,7 @@
 #include <ctime>   // Для функции time()
 #include <fstream> // Для std::ofstream
 #include "Matrix.h"
+#include "MatrixBlock.h"
 
 // Функция для заполнения матрицы случайными значениями
 template <typename T>
@@ -17,7 +18,7 @@ void fillMatrix(MatrixDense<T>& matrix) {
 int main() {
     try {
         // Инициализация генератора случайных чисел
-        std::srand(static_cast<unsigned>(std::time(0)));
+        /*std::srand(static_cast<unsigned>(std::time(0)));
 
         // Создаем матрицы 3x3
         MatrixDense<double> matrixA(3, 3);
@@ -87,7 +88,26 @@ int main() {
 
         outFile.close(); // Закрытие файла
 
-        std::cout << "All matrices successfully generated in file matrices.txt" << std::endl;
+        std::cout << "All matrices successfully generated in file matrices.txt" << std::endl; */
+
+
+
+
+        std::cout << "Starting work with MatixBlock class" << std::endl;
+
+
+
+
+        // Создаем блочную матрицу 3x3 с блоками 2x2
+        BlockMatrix<double> blockMatrix(2, 3);
+
+        // Заполняем блочную матрицу случайными значениями
+        blockMatrix.fillRandom();
+
+        // Выводим содержимое блочной матрицы
+        std::cout << "Block Matrix:" << std::endl;
+        blockMatrix.print();
+
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

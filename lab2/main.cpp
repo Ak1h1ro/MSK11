@@ -120,6 +120,34 @@ int main() {
             std::cerr << "Failed to import matrix." << std::endl;
         }
 
+        // Умножаем на скаляр
+        double scalar = 2.0;
+        blockMatrix.scalarMultiply(scalar);
+        std::cout << "After scalar multiplication by " << scalar << ":" << std::endl;
+        blockMatrix.print();
+
+        // Создаем другую блочную матрицу для поэлементного умножения
+        BlockMatrix<double> blockMatrix2(2, 3, 3, 4);
+        blockMatrix2.fillRandom();
+        std::cout << "Second Block Matrix for element-wise multiplication:" << std::endl;
+        blockMatrix2.print();
+
+        // Поэлементное умножение
+        BlockMatrix<double> elementWiseResult = blockMatrix.elementWiseMultiply(blockMatrix2);
+        std::cout << "Element-wise multiplication result:" << std::endl;
+        elementWiseResult.print();
+
+        // Создаем другую блочную матрицу для матричного умножения
+        BlockMatrix<double> blockMatrix3(3, 2, 4, 3);
+        blockMatrix3.fillRandom();
+        std::cout << "Third Block Matrix for matrix multiplication:" << std::endl;
+        blockMatrix3.print();
+
+        // Матричное умножение
+        BlockMatrix<double> matrixMultiplyResult = blockMatrix * blockMatrix3;
+        std::cout << "Matrix multiplication result:" << std::endl;
+        matrixMultiplyResult.print();
+
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

@@ -101,5 +101,64 @@ bool BlockMatrix<T>::importFromFile(const std::string& filename) {
     return true;
 }
 
+template <typename T>
+void BlockMatrix<T>::scalarMultiply(T scalar) {
+    for (unsigned i = 0; i < numBlocksRows_; ++i) {
+        for (unsigned j = 0; j < numBlocksCols_; ++j) {
+            for (unsigned k = 0; k < blockRows_; ++k) {
+                for (unsigned l = 0; l < blockCols_; ++l) {
+                    blocks_[i][j][k * blockCols_ + l] *= scalar;
+                }
+            }
+        }
+    }
+}
+
+template <typename T>
+BlockMatrix<T> BlockMatrix<T>::elementWiseMultiply(const BlockMatrix<T>& other) const {
+    if (numBlocksRows_ != other.numBlocksRows_ || numBlocksCols_ != other.numBlocksCols_ ||
+        blockRows_ != other.blockRows_ || blockCols_ != other.blockCols_) {
+        throw std::invalid_argument("Matrices must have the same dimensions for element-wise multiplication.");
+    }
+
+    BlockMatrix<T> result(blockRows_, blockCols_, numBlocksRows_, numBlocksCols_);
+
+    for (unsigned i = 0; i < numBlocksRows_; ++i) {
+        for (unsigned j = 0; j < numBlocksCols_; ++j) {
+            for (unsigned k = 0; k < blockRows_; ++k) {
+                for (unsigned l = 0; l < blockCols_; ++l) {
+                    result.blocks_[i][j][k * blockCols_ + l] = blocks_[i][j][k * blockCols_ + l] * other.blocks_[i][j][k * blockCols_ + l];
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+template <typename T>
+BlockMatrix<T> BlockMatrix<T>::operator*(const BlockMatrix<T>& other) const {
+    if (numBlocksCols_ != other.numBlocksRows_ || blockCols_ != other.blockRows_) {
+        throw std::invalid_argument("Matrix dimensions do not allow multiplication.");
+    }
+
+    BlockMatrix<T> result(blockRows_, other.blockCols_, numBlocksRows_, other.numBlocksCols_);
+
+    for (unsigned i = 0; i < numBlocksRows_; ++i) {
+        for (unsigned j = 0; j < other.numBlocksCols_; ++j) {
+            for (unsigned k = 0; k < numBlocksCols_; ++k) {
+                for (unsigned m = 0; m < blockRows_; ++m) {
+                    for (unsigned n = 0; n < other.blockCols_; ++n) {
+                        result.blocks_[i][j][m * other.blockCols_ + n] += blocks_[i][k][m * blockCols_ + n] * other.blocks_[k][j][n];
+                    }
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+
 template class BlockMatrix<int>;
 template class BlockMatrix<double>;

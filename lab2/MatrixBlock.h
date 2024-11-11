@@ -29,6 +29,9 @@ public:
     void print() const override;
     void exportToFile(const std::string& filename) const override;
     bool importFromFile(const std::string& filename) override;
+    void scalarMultiply(T scalar);
+    BlockMatrix<T> elementWiseMultiply(const BlockMatrix<T>& other) const;
+    BlockMatrix<T> operator*(const BlockMatrix<T>& other) const;
 
 private:
     unsigned blockRows_;    // Количество строк в блоке

@@ -148,6 +148,21 @@ int main() {
         std::cout << "Matrix multiplication result:" << std::endl;
         matrixMultiplyResult.print();
 
+        // Матричное сложение
+        BlockMatrix<double> additionResult = blockMatrix + blockMatrix2;
+        std::cout << "Addition result:" << std::endl;
+        additionResult.print();
+
+        // Матричное вычитание
+        BlockMatrix<double> subtractionResult = blockMatrix - blockMatrix2;
+        std::cout << "Subtraction result:" << std::endl;
+        subtractionResult.print();
+
+        // Транспонирование первой матрицы
+        BlockMatrix<double> transposeResult = blockMatrix.transpose();
+        std::cout << "Transpose of the first matrix:" << std::endl;
+        transposeResult.print();
+
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

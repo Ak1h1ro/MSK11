@@ -159,6 +159,67 @@ BlockMatrix<T> BlockMatrix<T>::operator*(const BlockMatrix<T>& other) const {
     return result;
 }
 
+template <typename T>
+BlockMatrix<T> BlockMatrix<T>::operator+(const BlockMatrix<T>& other) const {
+    if (numBlocksRows_ != other.numBlocksRows_ || numBlocksCols_ != other.numBlocksCols_ ||
+        blockRows_ != other.blockRows_ || blockCols_ != other.blockCols_) {
+        throw std::invalid_argument("Matrices must have the same dimensions for addition.");
+    }
+
+    BlockMatrix<T> result(blockRows_, blockCols_, numBlocksRows_, numBlocksCols_);
+
+    for (unsigned i = 0; i < numBlocksRows_; ++i) {
+        for (unsigned j = 0; j < numBlocksCols_; ++j) {
+            for (unsigned k = 0; k < blockRows_; ++k) {
+                for (unsigned l = 0; l < blockCols_; ++l) {
+                    result.blocks_[i][j][k * blockCols_ + l] = blocks_[i][j][k * blockCols_ + l] + other.blocks_[i][j][k * blockCols_ + l];
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+template <typename T>
+BlockMatrix<T> BlockMatrix<T>::operator-(const BlockMatrix<T>& other) const {
+    if (numBlocksRows_ != other.numBlocksRows_ || numBlocksCols_ != other.numBlocksCols_ ||
+        blockRows_ != other.blockRows_ || blockCols_ != other.blockCols_) {
+        throw std::invalid_argument("Matrices must have the same dimensions for subtraction.");
+    }
+
+    BlockMatrix<T> result(blockRows_, blockCols_, numBlocksRows_, numBlocksCols_);
+
+    for (unsigned i = 0; i < numBlocksRows_; ++i) {
+        for (unsigned j = 0; j < numBlocksCols_; ++j) {
+            for (unsigned k = 0; k < blockRows_; ++k) {
+                for (unsigned l = 0; l < blockCols_; ++l) {
+                    result.blocks_[i][j][k * blockCols_ + l] = blocks_[i][j][k * blockCols_ + l] - other.blocks_[i][j][k * blockCols_ + l];
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+template <typename T>
+BlockMatrix<T> BlockMatrix<T>::transpose() const {
+    BlockMatrix<T> result(blockCols_, blockRows_, numBlocksCols_, numBlocksRows_);
+
+    for (unsigned i = 0; i < numBlocksRows_; ++i) {
+        for (unsigned j = 0; j < numBlocksCols_; ++j) {
+            for (unsigned k = 0; k < blockRows_; ++k) {
+                for (unsigned l = 0; l < blockCols_; ++l) {
+                    result.blocks_[j][i][l * blockRows_ + k] = blocks_[i][j][k * blockCols_ + l];
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 
 template class BlockMatrix<int>;
 template class BlockMatrix<double>;

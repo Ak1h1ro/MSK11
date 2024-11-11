@@ -29,9 +29,12 @@ public:
     void print() const override;
     void exportToFile(const std::string& filename) const override;
     bool importFromFile(const std::string& filename) override;
-    void scalarMultiply(T scalar);
-    BlockMatrix<T> elementWiseMultiply(const BlockMatrix<T>& other) const;
-    BlockMatrix<T> operator*(const BlockMatrix<T>& other) const;
+    void scalarMultiply(T scalar);// умноженеи на скаляр
+    BlockMatrix<T> elementWiseMultiply(const BlockMatrix<T>& other) const; //поэлементное
+    BlockMatrix<T> operator*(const BlockMatrix<T>& other) const; // матричное умножение
+    BlockMatrix<T> operator+(const BlockMatrix<T>& other) const; // Сложение
+    BlockMatrix<T> operator-(const BlockMatrix<T>& other) const; // Вычитание
+    BlockMatrix<T> transpose() const; // Транспонирование
 
 private:
     unsigned blockRows_;    // Количество строк в блоке

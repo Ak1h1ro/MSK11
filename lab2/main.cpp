@@ -98,8 +98,8 @@ int main() {
 
 
 
-        // Создаем блочную матрицу 3x3 с блоками 2x2
-        BlockMatrix<double> blockMatrix(2, 3);
+        // Создаем блочную матрицу 3x4 с блоками 2x3
+        BlockMatrix<double> blockMatrix(2, 3, 3, 4); // 2 строки, 3 столбца в блоке; 3 блока по строкам, 4 блока по столбцам
 
         // Заполняем блочную матрицу случайными значениями
         blockMatrix.fillRandom();
@@ -107,6 +107,18 @@ int main() {
         // Выводим содержимое блочной матрицы
         std::cout << "Block Matrix:" << std::endl;
         blockMatrix.print();
+
+        // Экспортируем в файл
+        blockMatrix.exportToFile("block_matrix.txt");
+
+        // Создаем новую блочную матрицу для импорта
+        BlockMatrix<double> importedMatrix(0, 0, 0, 0); // Параметры не важны на этом этапе
+        if (importedMatrix.importFromFile("block_matrix.txt")) {
+            std::cout << "Block Matrix after import:" << std::endl;
+            importedMatrix.print();
+        } else {
+            std::cerr << "Failed to import matrix." << std::endl;
+        }
 
 
     } catch (const std::exception& e) {

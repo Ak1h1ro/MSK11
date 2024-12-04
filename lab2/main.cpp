@@ -179,6 +179,19 @@ int main() {
         std::cout << "Generated diagonal matrix C:" << std::endl;
         matrixC.print();
 
+        //экспортируем диагональную матрицу в файл
+        matrixC.exportToFile("Diagonal_Matrix_C.txt");
+        std::cout << "Diagonal matrix C successfully exported to Diagonal_Matrix_C.txt" << std::endl;
+
+        //импортируем диагональную матрицу из файла
+        MatrixDiagonal<double> importedMatrix(8); //создаем новую матрицу
+        if (importedMatrix.importFromFile("Diagonal_Matrix_C.txt")) {
+            std::cout << "Imported diagonal matrix from file:" << std::endl;
+            importedMatrix.print();
+        } else {
+            std::cerr << "Failed to import matrix." << std::endl;
+        }
+
 
 
     } catch (const std::exception& e) {

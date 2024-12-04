@@ -19,6 +19,12 @@ public:
     ~MatrixDiagonal(); // Деструктор
     void print() const; // Метод для отображения матрицы
     void fillRandom(); // Метод для заполнения матрицы случайными значениями
+    T& operator()(unsigned i, unsigned j); // Метод доступа к элементам матрицы
+    unsigned size() const; // Метод для получения размера матрицы
+    void exportToFile(const char* filename) const; // Экспорт в файл
+    bool importFromFile(const std::string& filename); // Импорт из файла
+
+
 };
 
 #endif // MATRIX_DIAGONAL_H

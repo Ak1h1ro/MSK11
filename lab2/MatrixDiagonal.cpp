@@ -50,6 +50,99 @@ void MatrixDiagonal<T>::fillRandom() {
     }
 }
 
+// Метод доступа к элементам матрицы
+template <typename T>
+T& MatrixDiagonal<T>::operator()(unsigned i, unsigned j) {
+    if (i >= _size || j >= _size) {
+        throw std::out_of_range("Indexes out of range.");
+    }
+    if (i == j) {
+        return _mainDiagonal[i]; // Главная диагональ
+    } else if (i + 1 == j) {
+        return _upperDiagonal[i]; // Верхняя диагональ
+    } else if (i == j + 1) {
+        return _lowerDiagonal[j]; // Нижняя диагональ
+    } else {
+        static T zero = 0; // Нулевое значение для не диагональных элементов
+        return zero;
+    }
+}
+
+// Метод для получения размера матрицы
+template <typename T>
+unsigned MatrixDiagonal<T>::size() const {
+    return _size;
+}
+
+// Метод для экспорта матрицы в файл
+template <typename T>
+void MatrixDiagonal<T>::exportToFile(const char* filename) const {
+    std::ofstream outFile(filename);
+
+    if (!outFile.is_open()) {
+        throw std::runtime_error("Unable to open file for writing.");
+    }
+
+    outFile << "MatrixDiagonal" << std::endl; // Записываем название класса
+    outFile << _size << std::endl; // Записываем размер матрицы
+
+    for (unsigned i = 0; i < _size; ++i) {
+        outFile << _mainDiagonal[i] << " ";
+    }
+    outFile << std::endl;
+
+    for (unsigned i = 0; i < _size - 1; ++i) {
+        outFile << _upperDiagonal[i] << " ";
+    }
+    outFile << std::endl;
+
+    for (unsigned i = 0; i < _size - 1; ++i) {
+        outFile << _lowerDiagonal[i] << " ";
+    }
+
+    outFile.close();
+}
+
+
+
+// Метод для импорта матрицы из файла
+template <typename T>
+bool MatrixDiagonal<T>::importFromFile(const std::string& filename) {
+    std::ifstream inFile(filename);
+
+    if (!inFile.is_open()) {
+        throw std::runtime_error("Unable to open file for reading.");
+    }
+
+    std::string className;
+    inFile >> className; // Считываем название класса
+
+    if (className != "MatrixDiagonal") {
+        std::cerr << "Invalid file format." << std::endl;
+        return false;
+    }
+
+    inFile >> _size; // Считываем размер матрицы
+
+    _mainDiagonal.resize(_size);
+    _upperDiagonal.resize(_size - 1);
+    _lowerDiagonal.resize(_size - 1);
+
+    for (unsigned i = 0; i < _size; ++i) {
+        inFile >> _mainDiagonal[i]; // Считываем главную диагональ
+    }
+
+    for (unsigned i = 0; i < _size - 1; ++i) {
+        inFile >> _upperDiagonal[i]; // Считываем верхнюю диагональ
+    }
+
+    for (unsigned i = 0; i < _size - 1; ++i) {
+        inFile >> _lowerDiagonal[i]; // Считываем нижнюю диагональ
+    }
+
+    inFile.close();
+    return true;
+}
 
 // Явная специализация для double (если нужно)
 template class MatrixDiagonal<double>;

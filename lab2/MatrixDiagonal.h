@@ -24,7 +24,9 @@ public:
     void exportToFile(const char* filename) const; // Экспорт в файл
     bool importFromFile(const std::string& filename); // Импорт из файла
     MatrixDiagonal<T> kroneckerProduct(const MatrixDiagonal<T>& other) const; // Метод для произведения Кронекера двух диагональных матриц
-
+    MatrixDiagonal<T> scalarMultiply(T scalar) const; // Умножение на скаляр
+    MatrixDiagonal<T> elementWiseMultiply(const MatrixDiagonal<T>& other) const; // Поэлементное умножение
+    MatrixDiagonal<T> operator*(const MatrixDiagonal<T>& other) const; // Матричное умножение
 
 
 };

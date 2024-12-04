@@ -198,7 +198,24 @@ int main() {
 
         // Произведение Кронекера матриц C и D
         MatrixDiagonal<double> matrixKroneckerProd = matrixC.kroneckerProduct(matrixD);
+        std::cout<<"Kronecker mulitiply of C & D "<<std::endl;
         matrixKroneckerProd.print();
+
+        // Умножаем на скаляр.
+        double scalar=2.5;
+        MatrixDiagonal<double> scaledMatrix=matrixC.scalarMultiply(scalar);
+        std::cout<<"Scaled matrix C by "<<scalar<<":"<<std::endl;
+        scaledMatrix.print();
+
+        // Матричное умножение.
+        MatrixDiagonal<double> multipliedMatrix = matrixC * matrixD;
+        std::cout<<"Result of multiplying matrices C and D:"<<std::endl;
+        multipliedMatrix.print();
+
+        // Поэлементное умножение.
+        MatrixDiagonal<double> elementWiseProduct = matrixC.elementWiseMultiply(matrixD);
+        std::cout << "Element-wise product of matrices C and D:" << std::endl;
+        elementWiseProduct.print();
 
 
     } catch (const std::exception& e) {

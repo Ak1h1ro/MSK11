@@ -172,6 +172,61 @@ MatrixDiagonal<T> MatrixDiagonal<T>::kroneckerProduct(const MatrixDiagonal<T>& o
     return result;
 }
 
+// Умножение на скаляр
+template <typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::scalarMultiply(T scalar) const {
+   MatrixDiagonal<T> result(_size);
+   for (unsigned i = 0; i < _size; ++i) {
+       result._mainDiagonal[i] = this->_mainDiagonal[i] * scalar;
+       if (i < _size - 1) {
+           result._upperDiagonal[i] = this->_upperDiagonal[i] * scalar;
+           result._lowerDiagonal[i] = this->_lowerDiagonal[i] * scalar;
+       }
+   }
+   return result;
+}
+
+// Матричное умножение через перегрузку оператора *
+template <typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::operator*(const MatrixDiagonal<T>& other) const {
+    if (_size != other._size) {
+        throw std::invalid_argument("Matrices must have the same size for multiplication.");
+    }
+
+    MatrixDiagonal<T> result(_size); // Создаем новую матрицу для результата
+
+    // Перемножаем главные диагонали
+    for (unsigned i = 0; i < _size; ++i) {
+        result._mainDiagonal[i] = this->_mainDiagonal[i] * other._mainDiagonal[i];
+    }
+
+    // Перемножаем верхние и нижние диагонали
+    for (unsigned i = 0; i < _size - 1; ++i) {
+        result._upperDiagonal[i] = this->_upperDiagonal[i] * other._mainDiagonal[i + 1] + this->_mainDiagonal[i] * other._upperDiagonal[i];
+        result._lowerDiagonal[i] = this->_lowerDiagonal[i] * other._mainDiagonal[i] + this->_mainDiagonal[i + 1] * other._lowerDiagonal[i];
+    }
+
+    return result;
+}
+
+// Поэлементное умножение двух матриц
+template <typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::elementWiseMultiply(const MatrixDiagonal<T>& other) const {
+    if (_size != other._size) {
+        throw std::invalid_argument("Matrices must have the same size for element-wise multiplication.");
+    }
+
+    MatrixDiagonal<T> result(_size);
+    for (unsigned i = 0; i < _size; ++i) {
+        result._mainDiagonal[i] = this->_mainDiagonal[i] * other._mainDiagonal[i];
+        if (i < _size - 1) {
+            result._upperDiagonal[i] = this->_upperDiagonal[i] * other._upperDiagonal[i];
+            result._lowerDiagonal[i] = this->_lowerDiagonal[i] * other._lowerDiagonal[i];
+        }
+    }
+    return result;
+}
+
 // Явная специализация для double (если нужно)
 template class MatrixDiagonal<double>;
 

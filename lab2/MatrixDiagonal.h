@@ -23,6 +23,8 @@ public:
     unsigned size() const; // Метод для получения размера матрицы
     void exportToFile(const char* filename) const; // Экспорт в файл
     bool importFromFile(const std::string& filename); // Импорт из файла
+    MatrixDiagonal<T> kroneckerProduct(const MatrixDiagonal<T>& other) const; // Метод для произведения Кронекера двух диагональных матриц
+
 
 
 };

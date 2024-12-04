@@ -144,6 +144,34 @@ bool MatrixDiagonal<T>::importFromFile(const std::string& filename) {
     return true;
 }
 
+// Метод для произведения Кронекера двух диагональных матриц
+template <typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::kroneckerProduct(const MatrixDiagonal<T>& other) const {
+    unsigned newSize = _size * other._size; // Новый размер матрицы
+    MatrixDiagonal<T> result(newSize); // Создаем новую матрицу для результата
+
+    for (unsigned i = 0; i < _size; ++i) {
+        for (unsigned j = 0; j < other._size; ++j) {
+            // Произведение элементов главной диагонали
+            result(i * other._size + j, i * other._size + j) = this->_mainDiagonal[i] * other._mainDiagonal[j];
+
+            // Если есть верхние и нижние диагонали, добавляем их
+            if (i < _size - 1) {
+                result(i * other._size + j, (i + 1) * other._size + j) = this->_upperDiagonal[i] * other._mainDiagonal[j];
+            }
+            if (j < other._size - 1) {
+                result(i * other._size + j, i * other._size + (j + 1)) = this->_mainDiagonal[i] * other._upperDiagonal[j];
+            }
+            if (i < _size - 1 && j < other._size - 1) {
+                result((i + 1) * other._size + j, i * other._size + j) = this->_lowerDiagonal[i] * other._mainDiagonal[j];
+                result(i * other._size + (j + 1), i * other._size + j) = this->_mainDiagonal[i] * other._lowerDiagonal[j];
+            }
+        }
+    }
+
+    return result;
+}
+
 // Явная специализация для double (если нужно)
 template class MatrixDiagonal<double>;
 

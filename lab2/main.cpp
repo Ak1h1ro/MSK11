@@ -172,7 +172,7 @@ int main() {
         // Создаем диагональную матрицу C размером 8
         MatrixDiagonal<double> matrixC(8);
 
-        // Заполняем диагональные элементы случайными значениями с помощью нового метода
+        // Заполняем диагональные элементы случайными значениями
         matrixC.fillRandom();
 
         // Выводим диагональную матрицу C на экран в консоль
@@ -192,6 +192,13 @@ int main() {
             std::cerr << "Failed to import matrix." << std::endl;
         }
 
+        // Создаем диагональную матрицу D размером 8 и заполняем случайными значениями
+        MatrixDiagonal<double> matrixD(8);
+        matrixD.fillRandom();
+
+        // Произведение Кронекера матриц C и D
+        MatrixDiagonal<double> matrixKroneckerProd = matrixC.kroneckerProduct(matrixD);
+        matrixKroneckerProd.print();
 
 
     } catch (const std::exception& e) {

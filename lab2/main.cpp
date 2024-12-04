@@ -4,6 +4,7 @@
 #include <fstream> // Для std::ofstream
 #include "Matrix.h"
 #include "MatrixBlock.h"
+#include "MatrixDiagonal.h"
 
 // Функция для заполнения матрицы случайными значениями
 template <typename T>
@@ -90,11 +91,10 @@ int main() {
 
         std::cout << "All matrices successfully generated in file matrices.txt" << std::endl; */
 
-
-
-
+        /*
+        std::cout << "--------------------------------------" << std::endl;
         std::cout << "Starting work with MatixBlock class" << std::endl;
-
+        std::cout << "--------------------------------------" << std::endl;
 
 
 
@@ -161,7 +161,24 @@ int main() {
         // Транспонирование первой матрицы
         BlockMatrix<double> transposeResult = blockMatrix.transpose();
         std::cout << "Transpose of the first matrix:" << std::endl;
-        transposeResult.print();
+        transposeResult.print(); */
+
+
+        std::cout << "--------------------------------------" << std::endl;
+        std::cout << "Starting work with MatixDiagonal class" << std::endl;
+        std::cout << "--------------------------------------" << std::endl;
+
+
+        // Создаем диагональную матрицу C размером 8
+        MatrixDiagonal<double> matrixC(8);
+
+        // Заполняем диагональные элементы случайными значениями с помощью нового метода
+        matrixC.fillRandom();
+
+        // Выводим диагональную матрицу C на экран в консоль
+        std::cout << "Generated diagonal matrix C:" << std::endl;
+        matrixC.print();
+
 
 
     } catch (const std::exception& e) {

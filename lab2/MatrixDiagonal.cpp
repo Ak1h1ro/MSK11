@@ -227,6 +227,71 @@ MatrixDiagonal<T> MatrixDiagonal<T>::elementWiseMultiply(const MatrixDiagonal<T>
     return result;
 }
 
+// Метод для матричного сложения
+template <typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::operator+(const MatrixDiagonal<T>& other) const {
+    if (_size != other._size) {
+        throw std::invalid_argument("Matrices must have the same size for addition.");
+    }
+
+    MatrixDiagonal<T> result(_size);
+
+    // Сложение главных диагоналей
+    for (unsigned i = 0; i < _size; ++i) {
+        result._mainDiagonal[i] = this->_mainDiagonal[i] + other._mainDiagonal[i];
+    }
+
+    // Сложение верхних и нижних диагоналей
+    for (unsigned i = 0; i < _size - 1; ++i) {
+        result._upperDiagonal[i] = this->_upperDiagonal[i] + other._upperDiagonal[i];
+        result._lowerDiagonal[i] = this->_lowerDiagonal[i] + other._lowerDiagonal[i];
+    }
+
+    return result;
+}
+
+// Метод для матричного вычитания
+template <typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::operator-(const MatrixDiagonal<T>& other) const {
+    if (_size != other._size) {
+        throw std::invalid_argument("Matrices must have the same size for subtraction.");
+    }
+
+    MatrixDiagonal<T> result(_size);
+
+    // Вычитание главных диагоналей
+    for (unsigned i = 0; i < _size; ++i) {
+        result._mainDiagonal[i] = this->_mainDiagonal[i] - other._mainDiagonal[i];
+    }
+
+    // Вычитание верхних и нижних диагоналей
+    for (unsigned i = 0; i < _size - 1; ++i) {
+        result._upperDiagonal[i] = this->_upperDiagonal[i] - other._upperDiagonal[i];
+        result._lowerDiagonal[i] = this->_lowerDiagonal[i] - other._lowerDiagonal[i];
+    }
+
+    return result;
+}
+
+// Метод для транспонирования матрицы
+template <typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::transpose() const {
+    MatrixDiagonal<T> result(_size);
+
+    // Транспонирование главной диагонали (остается неизменной)
+    for (unsigned i = 0; i < _size; ++i) {
+        result._mainDiagonal[i] = this->_mainDiagonal[i];
+    }
+
+    // Переключаем верхнюю и нижнюю диагонали
+    for (unsigned i = 0; i < _size - 1; ++i) {
+        result._upperDiagonal[i] = this->_lowerDiagonal[i]; // Верхняя диагональ становится нижней
+        result._lowerDiagonal[i] = this->_upperDiagonal[i]; // Нижняя диагональ становится верхней
+    }
+
+    return result;
+}
+
 // Явная специализация для double (если нужно)
 template class MatrixDiagonal<double>;
 

@@ -27,6 +27,9 @@ public:
     MatrixDiagonal<T> scalarMultiply(T scalar) const; // Умножение на скаляр
     MatrixDiagonal<T> elementWiseMultiply(const MatrixDiagonal<T>& other) const; // Поэлементное умножение
     MatrixDiagonal<T> operator*(const MatrixDiagonal<T>& other) const; // Матричное умножение
+    MatrixDiagonal<T> operator+(const MatrixDiagonal<T>& other) const; // Матричное сложение
+    MatrixDiagonal<T> operator-(const MatrixDiagonal<T>& other) const; // Матричное вычитание
+    MatrixDiagonal<T> transpose() const; // Транспонирование матрицы
 
 
 };

@@ -217,6 +217,21 @@ int main() {
         std::cout << "Element-wise product of matrices C and D:" << std::endl;
         elementWiseProduct.print();
 
+        // Сложение матриц C и D
+        MatrixDiagonal<double> sumMatrix = matrixC + matrixD;
+        std::cout << "Sum of matrices C and D:" << std::endl;
+        sumMatrix.print();
+
+        // Вычитание матриц C и D
+        MatrixDiagonal<double> diffMatrix = matrixC - matrixD;
+        std::cout << "Difference of matrices C and D:" << std::endl;
+        diffMatrix.print();
+
+        // Транспонирование матрицы C
+        MatrixDiagonal<double> transposedMatrixC = matrixC.transpose();
+        std::cout << "Transposed matrix C:" << std::endl;
+        transposedMatrixC.print();
+
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

@@ -169,3 +169,5 @@ MatrixDense<T> MatrixDense<T>::transpose() const {
 
 // Явная специализация для double
 template class MatrixDense<double>;
+template class MatrixDense<int>;
+

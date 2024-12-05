@@ -8,21 +8,38 @@
 template <typename T>
 BlockMatrix<T>::BlockMatrix(unsigned blockRows, unsigned blockCols, unsigned numBlocksRows, unsigned numBlocksCols)
     : blockRows_(blockRows), blockCols_(blockCols), numBlocksRows_(numBlocksRows), numBlocksCols_(numBlocksCols) {
-    blocks_.resize(numBlocksRows_, std::vector<std::vector<T>>(numBlocksCols_, std::vector<T>(blockRows_ * blockCols_)));
+
+    // Инициализация блоков с использованием shared_ptr для управления памятью
+    blocks_.resize(numBlocksRows_, std::vector<std::shared_ptr<MatrixDense<T>>>(numBlocksCols_));
+
+    for (unsigned i = 0; i < numBlocksRows_; ++i) {
+        for (unsigned j = 0; j < numBlocksCols_; ++j) {
+            blocks_[i][j] = std::make_shared<MatrixDense<T>>(blockRows_, blockCols_);
+        }
+    }
 }
 
 template <typename T>
 BlockMatrix<T>::~BlockMatrix() {
-    // Вектор автоматически очищает память
+    // Умные указатели автоматически очищают память
 }
 
 template <typename T>
 void BlockMatrix<T>::fillRandom() {
     for (unsigned i = 0; i < numBlocksRows_; ++i) {
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
-            for (unsigned k = 0; k < blockRows_; ++k) {
-                for (unsigned l = 0; l < blockCols_; ++l) {
-                    blocks_[i][j][k * blockCols_ + l] = static_cast<T>(std::rand() % 100 + 1);
+            auto& block = *blocks_[i][j]; // Получаем доступ к блоку
+
+            for (unsigned k = 0; k < block.rows(); ++k) {
+                for (unsigned l = 0; l < block.cols(); ++l) {
+                    T value = static_cast<T>(std::rand() % 100 + 1);
+
+                    // Используем уникальные элементы
+                    if (uniqueElements_.find(value) == uniqueElements_.end()) {
+                        uniqueElements_[value] = std::make_shared<T>(value);
+                    }
+
+                    block(k, l) = *uniqueElements_[value];
                 }
             }
         }
@@ -34,12 +51,7 @@ void BlockMatrix<T>::print() const {
     for (unsigned i = 0; i < numBlocksRows_; ++i) {
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
             std::cout << "Block (" << i << ", " << j << "):" << std::endl;
-            for (unsigned k = 0; k < blockRows_; ++k) {
-                for (unsigned l = 0; l < blockCols_; ++l) {
-                    std::cout << blocks_[i][j][k * blockCols_ + l] << " ";
-                }
-                std::cout << std::endl;
-            }
+            blocks_[i][j]->print(); // Используем метод print из MatrixDense
         }
     }
 }
@@ -59,7 +71,8 @@ void BlockMatrix<T>::exportToFile(const std::string& filename) const {
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
             for (unsigned k = 0; k < blockRows_; ++k) {
                 for (unsigned l = 0; l < blockCols_; ++l) {
-                    outFile << blocks_[i][j][k * blockCols_ + l] << " ";
+                    // Используем разыменование для доступа к элементам MatrixDense
+                    outFile << (*blocks_[i][j])(k, l) << " ";
                 }
                 outFile << std::endl;
             }
@@ -85,13 +98,19 @@ bool BlockMatrix<T>::importFromFile(const std::string& filename) {
     }
 
     inFile >> blockRows_ >> blockCols_ >> numBlocksRows_ >> numBlocksCols_;
-    blocks_.resize(numBlocksRows_, std::vector<std::vector<T>>(numBlocksCols_, std::vector<T>(blockRows_ * blockCols_)));
+
+    // Измените инициализацию blocks_ на использование shared_ptr
+    blocks_.resize(numBlocksRows_, std::vector<std::shared_ptr<MatrixDense<T>>>(numBlocksCols_));
 
     for (unsigned i = 0; i < numBlocksRows_; ++i) {
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
+            // Создаем новый объект MatrixDense для каждого блока
+            blocks_[i][j] = std::make_shared<MatrixDense<T>>(blockRows_, blockCols_);
             for (unsigned k = 0; k < blockRows_; ++k) {
                 for (unsigned l = 0; l < blockCols_; ++l) {
-                    inFile >> blocks_[i][j][k * blockCols_ + l];
+                    T value;
+                    inFile >> value; // Считываем значение из файла
+                    (*blocks_[i][j])(k, l) = value; // Записываем значение в матрицу
                 }
             }
         }
@@ -107,7 +126,8 @@ void BlockMatrix<T>::scalarMultiply(T scalar) {
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
             for (unsigned k = 0; k < blockRows_; ++k) {
                 for (unsigned l = 0; l < blockCols_; ++l) {
-                    blocks_[i][j][k * blockCols_ + l] *= scalar;
+                    // Используем разыменование для доступа к элементам MatrixDense
+                    (*blocks_[i][j])(k, l) *= scalar;
                 }
             }
         }
@@ -127,7 +147,8 @@ BlockMatrix<T> BlockMatrix<T>::elementWiseMultiply(const BlockMatrix<T>& other) 
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
             for (unsigned k = 0; k < blockRows_; ++k) {
                 for (unsigned l = 0; l < blockCols_; ++l) {
-                    result.blocks_[i][j][k * blockCols_ + l] = blocks_[i][j][k * blockCols_ + l] * other.blocks_[i][j][k * blockCols_ + l];
+                    // Используем разыменование для доступа к элементам MatrixDense
+                    (*result.blocks_[i][j])(k, l) = (*blocks_[i][j])(k, l) * (*other.blocks_[i][j])(k, l);
                 }
             }
         }
@@ -149,7 +170,9 @@ BlockMatrix<T> BlockMatrix<T>::operator*(const BlockMatrix<T>& other) const {
             for (unsigned k = 0; k < numBlocksCols_; ++k) {
                 for (unsigned m = 0; m < blockRows_; ++m) {
                     for (unsigned n = 0; n < other.blockCols_; ++n) {
-                        result.blocks_[i][j][m * other.blockCols_ + n] += blocks_[i][k][m * blockCols_ + n] * other.blocks_[k][j][n];
+                        // Правильный доступ к элементам MatrixDense через разыменование
+                        result.blocks_[i][j]->operator()(m, n) +=
+                            blocks_[i][k]->operator()(m, n) * other.blocks_[k][j]->operator()(m, n);
                     }
                 }
             }
@@ -158,6 +181,7 @@ BlockMatrix<T> BlockMatrix<T>::operator*(const BlockMatrix<T>& other) const {
 
     return result;
 }
+
 
 template <typename T>
 BlockMatrix<T> BlockMatrix<T>::operator+(const BlockMatrix<T>& other) const {
@@ -172,7 +196,8 @@ BlockMatrix<T> BlockMatrix<T>::operator+(const BlockMatrix<T>& other) const {
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
             for (unsigned k = 0; k < blockRows_; ++k) {
                 for (unsigned l = 0; l < blockCols_; ++l) {
-                    result.blocks_[i][j][k * blockCols_ + l] = blocks_[i][j][k * blockCols_ + l] + other.blocks_[i][j][k * blockCols_ + l];
+                    // Используем разыменование для доступа к элементам MatrixDense
+                    (*result.blocks_[i][j])(k, l) = (*blocks_[i][j])(k, l) + (*other.blocks_[i][j])(k, l);
                 }
             }
         }
@@ -194,7 +219,8 @@ BlockMatrix<T> BlockMatrix<T>::operator-(const BlockMatrix<T>& other) const {
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
             for (unsigned k = 0; k < blockRows_; ++k) {
                 for (unsigned l = 0; l < blockCols_; ++l) {
-                    result.blocks_[i][j][k * blockCols_ + l] = blocks_[i][j][k * blockCols_ + l] - other.blocks_[i][j][k * blockCols_ + l];
+                    // Используем разыменование для доступа к элементам MatrixDense
+                    (*result.blocks_[i][j])(k, l) = (*blocks_[i][j])(k, l) - (*other.blocks_[i][j])(k, l);
                 }
             }
         }
@@ -211,7 +237,8 @@ BlockMatrix<T> BlockMatrix<T>::transpose() const {
         for (unsigned j = 0; j < numBlocksCols_; ++j) {
             for (unsigned k = 0; k < blockRows_; ++k) {
                 for (unsigned l = 0; l < blockCols_; ++l) {
-                    result.blocks_[j][i][l * blockRows_ + k] = blocks_[i][j][k * blockCols_ + l];
+                    // Используем разыменование для доступа к элементам MatrixDense
+                    (*result.blocks_[j][i])(l, k) = (*blocks_[i][j])(k, l);
                 }
             }
         }

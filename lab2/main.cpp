@@ -91,7 +91,7 @@ int main() {
 
         std::cout << "All matrices successfully generated in file matrices.txt" << std::endl; */
 
-        /*
+
         std::cout << "--------------------------------------" << std::endl;
         std::cout << "Starting work with MatixBlock class" << std::endl;
         std::cout << "--------------------------------------" << std::endl;
@@ -112,7 +112,7 @@ int main() {
         blockMatrix.exportToFile("block_matrix.txt");
 
         // Создаем новую блочную матрицу для импорта
-        BlockMatrix<double> importedMatrix(0, 0, 0, 0); // Параметры не важны на этом этапе
+        BlockMatrix<double> importedMatrix(2, 3, 3, 4); // Параметры должны совпадать с исходной матрицей
         if (importedMatrix.importFromFile("block_matrix.txt")) {
             std::cout << "Block Matrix after import:" << std::endl;
             importedMatrix.print();
@@ -161,10 +161,10 @@ int main() {
         // Транспонирование первой матрицы
         BlockMatrix<double> transposeResult = blockMatrix.transpose();
         std::cout << "Transpose of the first matrix:" << std::endl;
-        transposeResult.print(); */
+        transposeResult.print();
 
 
-        std::cout << "--------------------------------------" << std::endl;
+        /*std::cout << "--------------------------------------" << std::endl;
         std::cout << "Starting work with MatixDiagonal class" << std::endl;
         std::cout << "--------------------------------------" << std::endl;
 
@@ -230,7 +230,7 @@ int main() {
         // Транспонирование матрицы C
         MatrixDiagonal<double> transposedMatrixC = matrixC.transpose();
         std::cout << "Transposed matrix C:" << std::endl;
-        transposedMatrixC.print();
+        transposedMatrixC.print(); */
 
 
     } catch (const std::exception& e) {

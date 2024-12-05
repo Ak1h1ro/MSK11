@@ -7,6 +7,9 @@
 #include <ctime>
 #include <fstream>
 #include <string>
+#include <memory>
+#include <unordered_map>
+#include "Matrix.h" // Подключаем MatrixDense
 
 template <typename T>
 class MatrixBlock {
@@ -29,19 +32,25 @@ public:
     void print() const override;
     void exportToFile(const std::string& filename) const override;
     bool importFromFile(const std::string& filename) override;
-    void scalarMultiply(T scalar);// умноженеи на скаляр
-    BlockMatrix<T> elementWiseMultiply(const BlockMatrix<T>& other) const; //поэлементное
-    BlockMatrix<T> operator*(const BlockMatrix<T>& other) const; // матричное умножение
-    BlockMatrix<T> operator+(const BlockMatrix<T>& other) const; // Сложение
-    BlockMatrix<T> operator-(const BlockMatrix<T>& other) const; // Вычитание
-    BlockMatrix<T> transpose() const; // Транспонирование
+
+    void scalarMultiply(T scalar);
+    BlockMatrix<T> elementWiseMultiply(const BlockMatrix<T>& other) const;
+    BlockMatrix<T> operator*(const BlockMatrix<T>& other) const;
+    BlockMatrix<T> operator+(const BlockMatrix<T>& other) const;
+    BlockMatrix<T> operator-(const BlockMatrix<T>& other) const;
+    BlockMatrix<T> transpose() const;
 
 private:
-    unsigned blockRows_;    // Количество строк в блоке
-    unsigned blockCols_;    // Количество столбцов в блоке
-    unsigned numBlocksRows_; // Количество блоков по строкам
-    unsigned numBlocksCols_; // Количество блоков по столбцам
-    std::vector<std::vector<std::vector<T>>> blocks_;
+    unsigned blockRows_;
+    unsigned blockCols_;
+    unsigned numBlocksRows_;
+    unsigned numBlocksCols_;
+
+    // Используем умные указатели для хранения блоков MatrixDense
+    std::vector<std::vector<std::shared_ptr<MatrixDense<T>>>> blocks_;
+
+    // Хранение уникальных элементов для оптимизации памяти
+    std::unordered_map<T, std::shared_ptr<T>> uniqueElements_;
 };
 
 #endif // MATRIXBLOCK_H

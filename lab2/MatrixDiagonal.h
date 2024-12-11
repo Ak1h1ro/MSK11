@@ -1,38 +1,32 @@
-#ifndef MATRIX_DIAGONAL_H
-#define MATRIX_DIAGONAL_H
-#include <ctime>   // Для функции time()
-#include <iostream>
-#include <stdexcept>
+#ifndef MATRIXDIAGONAL_H
+#define MATRIXDIAGONAL_H
+
 #include <vector>
-#include <fstream> // Для std::ofstream
+#include <iostream>
+#include <random>
+#include <stdexcept>
+#include <type_traits>
 
-template <typename T = double>
+template<typename T>
 class MatrixDiagonal {
-private:
-    unsigned _size; // Размер матрицы (количество строк и столбцов)
-    std::vector<T> _mainDiagonal; // Вектор для главной диагонали
-    std::vector<T> _upperDiagonal; // Вектор для верхней диагонали
-    std::vector<T> _lowerDiagonal; // Вектор для нижней диагонали
-
 public:
-    MatrixDiagonal(unsigned size); // Конструктор
-    ~MatrixDiagonal(); // Деструктор
-    void print() const; // Метод для отображения матрицы
-    void fillRandom(); // Метод для заполнения матрицы случайными значениями
-    T& operator()(unsigned i, unsigned j); // Метод доступа к элементам матрицы
-    unsigned size() const; // Метод для получения размера матрицы
-    void exportToFile(const char* filename) const; // Экспорт в файл
-    bool importFromFile(const std::string& filename); // Импорт из файла
-    MatrixDiagonal<T> kroneckerProduct(const MatrixDiagonal<T>& other) const; // Метод для произведения Кронекера двух диагональных матриц
-    MatrixDiagonal<T> scalarMultiply(T scalar) const; // Умножение на скаляр
-    MatrixDiagonal<T> elementWiseMultiply(const MatrixDiagonal<T>& other) const; // Поэлементное умножение
-    MatrixDiagonal<T> operator*(const MatrixDiagonal<T>& other) const; // Матричное умножение
-    MatrixDiagonal<T> operator+(const MatrixDiagonal<T>& other) const; // Матричное сложение
-    MatrixDiagonal<T> operator-(const MatrixDiagonal<T>& other) const; // Матричное вычитание
-    MatrixDiagonal<T> transpose() const; // Транспонирование матрицы
+    MatrixDiagonal(int size);
+    void addLowerDiagonal(int offset);
+    void addUpperDiagonal(int offset);
+    void fillLowerDiagonalRandom(int offset);
+    void fillUpperDiagonalRandom(int offset);
+    void fillMainDiagonalRandom();
+    void print() const;
 
-
+private:
+    int size;
+    std::vector<std::vector<T>> matrix; // Матрица инициализируется нулями
+    std::mt19937 rng; // Генератор случайных чисел
+    std::uniform_real_distribution<double> realDist; // Распределение для генерации случайных чисел с плавающей запятой
+    std::uniform_int_distribution<int> intDist; // Распределение для генерации случайных целых чисел
 };
 
-#endif // MATRIX_DIAGONAL_H
+// Явная специализация для double
+extern template class MatrixDiagonal<double>;
 
+#endif // MATRIXDIAGONAL_H

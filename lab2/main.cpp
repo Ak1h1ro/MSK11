@@ -1,33 +1,23 @@
-#include <iostream>
 #include <cstdlib> // Для функции rand()
 #include <ctime>   // Для функции time()
 #include <fstream> // Для std::ofstream
-#include "Matrix.h"
-#include "MatrixBlock.h"
-#include "MatrixDiagonal.h"
+//#include "Matrix.h"
+//#include "MatrixBlock.h"
+#include <iostream>
 
-// Функция для заполнения матрицы случайными значениями
-template <typename T>
-void fillMatrix(MatrixDense<T>& matrix) {
-    for (unsigned i = 0; i < matrix.rows(); ++i) {
-        for (unsigned j = 0; j < matrix.cols(); ++j) {
-            matrix(i, j) = static_cast<T>(std::rand() % 100 + 1); // Случайное значение от 1 до 100
-        }
-    }
-}
+#include <iostream>
+#include "MatrixDiagonal.h"
 
 int main() {
     try {
-        // Инициализация генератора случайных чисел
-        /*std::srand(static_cast<unsigned>(std::time(0)));
 
-        // Создаем матрицы 3x3
+         /*  // Создаем матрицы 3x3
         MatrixDense<double> matrixA(3, 3);
         MatrixDense<double> matrixB(3, 3);
 
         // Заполняем матрицы случайными значениями
-        fillMatrix(matrixA);
-        fillMatrix(matrixB);
+        matrixA.fillRandom();
+        matrixB.fillRandom();
 
         // Выводим матрицы A и B в консоль
         std::cout << "Generated matrix A:" << std::endl;
@@ -36,15 +26,20 @@ int main() {
         std::cout << "Generated matrix B:" << std::endl;
         matrixB.print();
 
-        // Открываем файл для записи
-        std::ofstream outFile("matrices.txt");
-        if (!outFile) {
-            throw std::runtime_error("The file could not be opened for writing");
-        }
+        // Экспортируем матрицу A в файл
+        matrixA.exportToFile("Matrix_A.txt");
 
-        // Записываем матрицы в файл с использованием метода exportToFile
-        matrixA.exportToFile(outFile, "Matrix A:");
-        matrixB.exportToFile(outFile, "\nMatrix B:");
+        std::cout << "Matrix A successfully exported to file: Matrix_A.txt" << std::endl;
+
+        // Создаем новую матрицу для импорта
+        MatrixDense<double> matrixC(3, 3);
+
+        if (matrixC.importFromFile("Matrix_A.txt")) {
+            std::cout << "Matrix C successfully imported from file: Matrix_A.txt" << std::endl;
+            matrixC.print();  // Выводим импортированную матрицу B на экран
+        } else {
+            std::cerr << "Failed to import matrix." << std::endl;
+        }
 
         // Умножаем матрицу A на скаляр
         double scalar = 2.5; // Пример скаляра
@@ -54,44 +49,32 @@ int main() {
         std::cout << "Scaled matrix A (multiplied by " << scalar << "):" << std::endl;
         scaledMatrix.print();
 
-        // Записываем результирующую матрицу в файл
-        scaledMatrix.exportToFile(outFile, "\nScaled matrix A (multiplied by " + std::to_string(scalar) + "):");
-
         // Поэлементное умножение матриц A и B
         MatrixDense<double> elementWiseResult = matrixA.elementWiseMultiply(matrixB);
         std::cout << "Element-wise multiplication of A and B:" << std::endl;
         elementWiseResult.print();
-        elementWiseResult.exportToFile(outFile, "\nElement-wise multiplication of A and B:");
 
         // Матричное умножение матриц A и B
         MatrixDense<double> matrixResult = matrixA * matrixB;
         std::cout << "Matrix multiplication of A and B:" << std::endl;
         matrixResult.print();
-        matrixResult.exportToFile(outFile, "\nMatrix multiplication of A and B:");
 
         // Матричное сложение
         MatrixDense<double> additionResult = matrixA + matrixB;
         std::cout << "Matrix addition of A and B:" << std::endl;
         additionResult.print();
-        additionResult.exportToFile(outFile, "\nMatrix addition of A and B:");
 
         // Матричное вычитание
         MatrixDense<double> subtractionResult = matrixA - matrixB;
         std::cout << "Matrix subtraction of A and B:" << std::endl;
         subtractionResult.print();
-        subtractionResult.exportToFile(outFile, "\nMatrix subtraction of A and B:");
 
         // Транспонирование матрицы A
         MatrixDense<double> transposeResult = matrixA.transpose();
         std::cout << "Transpose of matrix A:" << std::endl;
-        transposeResult.print();
-        transposeResult.exportToFile(outFile, "\nTranspose of matrix A:");
+        transposeResult.print(); */
 
-        outFile.close(); // Закрытие файла
-
-        std::cout << "All matrices successfully generated in file matrices.txt" << std::endl; */
-
-
+        /*
         std::cout << "--------------------------------------" << std::endl;
         std::cout << "Starting work with MatixBlock class" << std::endl;
         std::cout << "--------------------------------------" << std::endl;
@@ -103,6 +86,18 @@ int main() {
 
         // Заполняем блочную матрицу случайными значениями
         blockMatrix.fillRandom();
+
+        // Доступ к элементу
+        try {
+            int value = blockMatrix(1, 1, 0, 0); // Доступ к элементу в блоке (1, 1) по индексу (0, 0)
+            std::cout << "Element at block (1, 1), position (0, 0): " << value << std::endl;
+
+            // Изменяем элемент
+            blockMatrix(1, 1, 0, 0) = 42;
+            std::cout << "New value at block (1, 1), position (0, 0): " << blockMatrix(1, 1, 0, 0) << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
 
         // Выводим содержимое блочной матрицы
         std::cout << "Block Matrix:" << std::endl;
@@ -121,9 +116,9 @@ int main() {
         }
 
         // Умножаем на скаляр
-        double scalar = 2.0;
-        blockMatrix.scalarMultiply(scalar);
-        std::cout << "After scalar multiplication by " << scalar << ":" << std::endl;
+        double scalar1 = 2.0;
+        blockMatrix.scalarMultiply(scalar1);
+        std::cout << "After scalar multiplication by " << scalar1 << ":" << std::endl;
         blockMatrix.print();
 
         // Создаем другую блочную матрицу для поэлементного умножения
@@ -133,9 +128,9 @@ int main() {
         blockMatrix2.print();
 
         // Поэлементное умножение
-        BlockMatrix<double> elementWiseResult = blockMatrix.elementWiseMultiply(blockMatrix2);
+        BlockMatrix<double> elementWiseResultBlock = blockMatrix.elementWiseMultiply(blockMatrix2);
         std::cout << "Element-wise multiplication result:" << std::endl;
-        elementWiseResult.print();
+        elementWiseResultBlock.print();
 
         // Создаем другую блочную матрицу для матричного умножения
         BlockMatrix<double> blockMatrix3(3, 2, 4, 3);
@@ -149,93 +144,59 @@ int main() {
         matrixMultiplyResult.print();
 
         // Матричное сложение
-        BlockMatrix<double> additionResult = blockMatrix + blockMatrix2;
+        BlockMatrix<double> additionResultBlock = blockMatrix + blockMatrix2;
         std::cout << "Addition result:" << std::endl;
-        additionResult.print();
+        additionResultBlock.print();
 
         // Матричное вычитание
-        BlockMatrix<double> subtractionResult = blockMatrix - blockMatrix2;
+        BlockMatrix<double> subtractionResultBlock = blockMatrix - blockMatrix2;
         std::cout << "Subtraction result:" << std::endl;
-        subtractionResult.print();
+        subtractionResultBlock.print();
 
         // Транспонирование первой матрицы
-        BlockMatrix<double> transposeResult = blockMatrix.transpose();
+        BlockMatrix<double> transposeResultBlock = blockMatrix.transpose();
         std::cout << "Transpose of the first matrix:" << std::endl;
-        transposeResult.print();
+        transposeResultBlock.print(); */
 
 
-        /*std::cout << "--------------------------------------" << std::endl;
+        std::cout << "--------------------------------------" << std::endl;
         std::cout << "Starting work with MatixDiagonal class" << std::endl;
         std::cout << "--------------------------------------" << std::endl;
 
 
-        // Создаем диагональную матрицу C размером 8
-        MatrixDiagonal<double> matrixC(8);
+        int size = 5; // Размер матрицы
 
-        // Заполняем диагональные элементы случайными значениями
-        matrixC.fillRandom();
+        // Пример с целыми числами
+        MatrixDiagonal<int> intMatrix(size);
+        std::cout << "Integer matrix:" << std::endl;
+        intMatrix.print();
 
-        // Выводим диагональную матрицу C на экран в консоль
-        std::cout << "Generated diagonal matrix C:" << std::endl;
-        matrixC.print();
+        intMatrix.addLowerDiagonal(2);
+        intMatrix.fillLowerDiagonalRandom(2);
 
-        //экспортируем диагональную матрицу в файл
-        matrixC.exportToFile("Diagonal_Matrix_C.txt");
-        std::cout << "Diagonal matrix C successfully exported to Diagonal_Matrix_C.txt" << std::endl;
+        std::cout << "\nThe matrix after adding the lower diagonal with an offset of -2:" << std::endl;
+        intMatrix.print();
 
-        //импортируем диагональную матрицу из файла
-        MatrixDiagonal<double> importedMatrix(8); //создаем новую матрицу
-        if (importedMatrix.importFromFile("Diagonal_Matrix_C.txt")) {
-            std::cout << "Imported diagonal matrix from file:" << std::endl;
-            importedMatrix.print();
-        } else {
-            std::cerr << "Failed to import matrix." << std::endl;
-        }
+        intMatrix.addUpperDiagonal(3);
+        intMatrix.fillUpperDiagonalRandom(3);
+        std::cout << "\nThe matrix after adding the lower diagonal with an offset of +3:" << std::endl;
+        intMatrix.print();
 
-        // Создаем диагональную матрицу D размером 8 и заполняем случайными значениями
-        MatrixDiagonal<double> matrixD(8);
-        matrixD.fillRandom();
+        // Пример с числами с плавающей запятой
+        MatrixDiagonal<double> doubleMatrix(size);
+        std::cout << "\nFloat matrix:" << std::endl;
+        doubleMatrix.print();
 
-        // Произведение Кронекера матриц C и D
-        MatrixDiagonal<double> matrixKroneckerProd = matrixC.kroneckerProduct(matrixD);
-        std::cout<<"Kronecker mulitiply of C & D "<<std::endl;
-        matrixKroneckerProd.print();
+        doubleMatrix.addLowerDiagonal(2);
+        doubleMatrix.fillLowerDiagonalRandom(2);
 
-        // Умножаем на скаляр.
-        double scalar=2.5;
-        MatrixDiagonal<double> scaledMatrix=matrixC.scalarMultiply(scalar);
-        std::cout<<"Scaled matrix C by "<<scalar<<":"<<std::endl;
-        scaledMatrix.print();
-
-        // Матричное умножение.
-        MatrixDiagonal<double> multipliedMatrix = matrixC * matrixD;
-        std::cout<<"Result of multiplying matrices C and D:"<<std::endl;
-        multipliedMatrix.print();
-
-        // Поэлементное умножение.
-        MatrixDiagonal<double> elementWiseProduct = matrixC.elementWiseMultiply(matrixD);
-        std::cout << "Element-wise product of matrices C and D:" << std::endl;
-        elementWiseProduct.print();
-
-        // Сложение матриц C и D
-        MatrixDiagonal<double> sumMatrix = matrixC + matrixD;
-        std::cout << "Sum of matrices C and D:" << std::endl;
-        sumMatrix.print();
-
-        // Вычитание матриц C и D
-        MatrixDiagonal<double> diffMatrix = matrixC - matrixD;
-        std::cout << "Difference of matrices C and D:" << std::endl;
-        diffMatrix.print();
-
-        // Транспонирование матрицы C
-        MatrixDiagonal<double> transposedMatrixC = matrixC.transpose();
-        std::cout << "Transposed matrix C:" << std::endl;
-        transposedMatrixC.print(); */
-
+        std::cout << "\nThe matrix after adding the lower diagonal with an offset of -2:" << std::endl;
+        doubleMatrix.print();
 
     } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "Ошибка: " << e.what() << std::endl;
     }
 
     return 0;
 }
+

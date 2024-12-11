@@ -22,9 +22,12 @@ public:
     void print() const;
     void exportToFile(const std::string& filename) const; // Экспорт в файл
     bool importFromFile(const std::string& filename); // Импорт из файла
+    T& operator()(unsigned i, unsigned j); // Метод доступа к элементам матрицы
+    unsigned size() const; // Метод для получения размера матрицы
+    MatrixDiagonal<T> kroneckerMultiplication(const MatrixDiagonal<T>& other) const; // Метод для произведения Кронекера двух диагональных матриц
 
 private:
-    int size;
+    int matrixSize;
     std::vector<std::vector<T>> matrix; // Матрица инициализируется нулями
     std::mt19937 rng; // Генератор случайных чисел
     std::uniform_real_distribution<double> realDist; // Распределение для генерации случайных чисел с плавающей запятой

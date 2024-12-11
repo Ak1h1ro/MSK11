@@ -182,7 +182,7 @@ int main() {
         std::cout << "\nThe matrix after adding the lower diagonal with an offset of +3:" << std::endl;
         intMatrix.print();
 
-        // Пример с числами с плавающей запятой
+        /*// Пример с числами с плавающей запятой
         MatrixDiagonal<double> doubleMatrix(size);
         std::cout << "\nFloat matrix:" << std::endl;
         doubleMatrix.print();
@@ -191,15 +191,28 @@ int main() {
         doubleMatrix.fillLowerDiagonalRandom(2);
 
         std::cout << "\nThe matrix after adding the lower diagonal with an offset of -2:" << std::endl;
-        doubleMatrix.print();
+        doubleMatrix.print(); */
 
-
+        //импорт в файл
         intMatrix.exportToFile("diagonal_matrix.txt");
 
+        //экспорт из файла
         MatrixDiagonal<int> importedMatrix(0); // Создаем пустую матрицу
         importedMatrix.importFromFile("diagonal_matrix.txt");
         std::cout << "\nThe matrix after import:" << std::endl;
         importedMatrix.print();
+
+        MatrixDiagonal<int> matrixB(4);
+        std::cout << "Integer matrix B:" << std::endl;
+        matrixB.print();
+
+        MatrixDiagonal<int> result = intMatrix.kroneckerMultiplication(matrixB);
+        // Доступ к элементам через оператор()
+        int value = result(0, 0);
+        std::cout << "value(0,0) = " << value << std::endl;
+        unsigned sizeOfResult = result.size();
+        std::cout << "size Of Result = " << sizeOfResult << std::endl;
+        result.print();
 
 
 

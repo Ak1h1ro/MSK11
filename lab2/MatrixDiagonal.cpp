@@ -322,8 +322,91 @@ MatrixDiagonal<T> MatrixDiagonal<T>::operator*(const MatrixDiagonal<T>& other) c
 }
 
 
+// Метод для матричного сложения
+template<typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::operator+(const MatrixDiagonal<T>& other) const {
+    if (matrixSize != other.matrixSize) {
+        throw std::invalid_argument("Размеры матриц должны совпадать для сложения.");
+    }
 
+    MatrixDiagonal<T> result(matrixSize); // Создаем новую матрицу для результата
 
+    for (int i = 0; i < matrixSize; ++i) {
+        result.matrix[i][i] = this->matrix[i][i] + other.matrix[i][i]; // Сложение главной диагонали
+
+        // Сложение верхних диагоналей
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i < matrixSize - offset) {
+                result.matrix[i][i + offset] = this->matrix[i][i + offset] + other.matrix[i][i + offset];
+            }
+        }
+
+        // Сложение нижних диагоналей
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i >= offset) {
+                result.matrix[i][i - offset] = this->matrix[i][i - offset] + other.matrix[i][i - offset];
+            }
+        }
+    }
+
+    return result;
+}
+
+// Метод для матричного вычитания
+template<typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::operator-(const MatrixDiagonal<T>& other) const {
+    if (matrixSize != other.matrixSize) {
+        throw std::invalid_argument("Размеры матриц должны совпадать для вычитания.");
+    }
+
+    MatrixDiagonal<T> result(matrixSize); // Создаем новую матрицу для результата
+
+    for (int i = 0; i < matrixSize; ++i) {
+        result.matrix[i][i] = this->matrix[i][i] - other.matrix[i][i]; // Вычитание главной диагонали
+
+        // Вычитание верхних диагоналей
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i < matrixSize - offset) {
+                result.matrix[i][i + offset] = this->matrix[i][i + offset] - other.matrix[i][i + offset];
+            }
+        }
+
+        // Вычитание нижних диагоналей
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i >= offset) {
+                result.matrix[i][i - offset] = this->matrix[i][i - offset] - other.matrix[i][i - offset];
+            }
+        }
+    }
+
+    return result;
+}
+
+// Метод для транспонирования матрицы
+template<typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::transpose() const {
+    MatrixDiagonal<T> result(matrixSize); // Создаем новую матрицу для результата
+
+    for (int i = 0; i < matrixSize; ++i) {
+        result.matrix[i][i] = this->matrix[i][i]; // Транспонирование главной диагонали
+
+        // Транспонирование верхних диагоналей
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i < matrixSize - offset) {
+                result.matrix[i + offset][i] = this->matrix[i][i + offset]; // Перенос верхней диагонали
+            }
+        }
+
+        // Транспонирование нижних диагоналей
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i >= offset) {
+                result.matrix[i - offset][i] = this->matrix[i][i - offset]; // Перенос нижней диагонали
+            }
+        }
+    }
+
+    return result;
+}
 
 
 

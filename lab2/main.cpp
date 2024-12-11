@@ -179,7 +179,7 @@ int main() {
 
         intMatrix.addUpperDiagonal(3);
         intMatrix.fillUpperDiagonalRandom(3);
-        std::cout << "\nThe matrix after adding the lower diagonal with an offset of +3:" << std::endl;
+        std::cout << "\nThe matrix after adding the upper diagonal with an offset of +3:" << std::endl;
         intMatrix.print();
 
         /*// Пример с числами с плавающей запятой
@@ -235,6 +235,18 @@ int main() {
         MatrixDiagonal<int> multipliedResult = matrixC * matrixB;
         std::cout << "\nThe result of matrix multiplication:" << std::endl;
         multipliedResult.print();
+
+        MatrixDiagonal<int> sumResultDiag = matrixC + matrixB;
+        std::cout << "\nThe result of sum C + B:" << std::endl;
+        sumResultDiag.print();
+
+        MatrixDiagonal<int> subtractResultDiag = matrixC - matrixB;
+        std::cout << "\nThe result of substract c - B:" << std::endl;
+        subtractResultDiag.print();
+
+        MatrixDiagonal<int> transposedMatrixDiag = matrixC.transpose();
+        std::cout << "\nThe result of transposition of C:" << std::endl;
+        transposedMatrixDiag.print();
 
 
     } catch (const std::exception& e) {

@@ -193,6 +193,16 @@ int main() {
         std::cout << "\nThe matrix after adding the lower diagonal with an offset of -2:" << std::endl;
         doubleMatrix.print();
 
+
+        intMatrix.exportToFile("diagonal_matrix.txt");
+
+        MatrixDiagonal<int> importedMatrix(0); // Создаем пустую матрицу
+        importedMatrix.importFromFile("diagonal_matrix.txt");
+        std::cout << "\nThe matrix after import:" << std::endl;
+        importedMatrix.print();
+
+
+
     } catch (const std::exception& e) {
         std::cerr << "Ошибка: " << e.what() << std::endl;
     }

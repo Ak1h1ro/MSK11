@@ -1,12 +1,19 @@
 #include "MatrixDiagonal.h"
 
-// Конструктор класса
 template<typename T>
-MatrixDiagonal<T>::MatrixDiagonal(int size) : size(size), realDist(1.0, 10.0), intDist(1, 10) {
+MatrixDiagonal<T>::MatrixDiagonal(int size)
+    : size(size), realDist(1.0, 100.0), intDist(1, 100) {
     matrix.resize(size, std::vector<T>(size, 0)); // Инициализация матрицы нулями
-    std::random_device rd; // Получаем случайное число из устройства
-    rng.seed(rd()); // Инициализация генератора случайных чисел
+    std::random_device rd;
+    // Используйте текущее время в качестве seed для генератора
+    rng.seed(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
     fillMainDiagonalRandom(); // Заполнение главной диагонали случайными значениями при создании
+}
+
+// Деструктор
+template <typename T>
+MatrixDiagonal<T>::~MatrixDiagonal() {
+    // Векторы автоматически освобождают память
 }
 
 // Метод для заполнения главной диагонали случайными значениями
@@ -78,6 +85,107 @@ void MatrixDiagonal<T>::print() const {
         std::cout << std::endl;
     }
 }
+
+template<typename T>
+void MatrixDiagonal<T>::exportToFile(const std::string& filename) const {
+    std::ofstream outFile(filename);
+    if (!outFile.is_open()) {
+        throw std::runtime_error("Не удалось открыть файл для записи.");
+    }
+
+    outFile << "MatrixDiagonal" << std::endl; // Записываем название класса
+    outFile << size << std::endl; // Записываем размер матрицы
+
+    // Записываем главную диагональ
+    for (int i = 0; i < size; ++i) {
+        outFile << matrix[i][i] << " ";
+    }
+    outFile << std::endl;
+
+    // Записываем верхние диагонали
+    for (int offset = 1; offset < size; ++offset) {
+        bool hasUpperDiagonal = false;
+        for (int i = 0; i < size - offset; ++i) {
+            if (matrix[i][i + offset] != 0) { // Проверяем, есть ли заполненные элементы
+                hasUpperDiagonal = true;
+                break;
+            }
+        }
+        if (hasUpperDiagonal) {
+            outFile << "+ " << offset << " ";
+            for (int i = 0; i < size - offset; ++i) {
+                outFile << matrix[i][i + offset] << " ";
+            }
+            outFile << std::endl;
+        }
+    }
+
+    // Записываем нижние диагонали
+    for (int offset = 1; offset < size; ++offset) {
+        bool hasLowerDiagonal = false;
+        for (int i = offset; i < size; ++i) {
+            if (matrix[i][i - offset] != 0) { // Проверяем, есть ли заполненные элементы
+                hasLowerDiagonal = true;
+                break;
+            }
+        }
+        if (hasLowerDiagonal) {
+            outFile << "- " << offset << " ";
+            for (int i = offset; i < size; ++i) {
+                outFile << matrix[i][i - offset] << " ";
+            }
+            outFile << std::endl;
+        }
+    }
+
+    outFile.close();
+}
+
+
+template<typename T>
+bool MatrixDiagonal<T>::importFromFile(const std::string& filename) {
+    std::ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        throw std::runtime_error("Не удалось открыть файл для чтения.");
+    }
+
+    std::string className;
+    inFile >> className; // Считываем название класса
+    if (className != "MatrixDiagonal") {
+        std::cerr << "Неверный формат файла." << std::endl;
+        return false;
+    }
+
+    inFile >> size; // Считываем размер матрицы
+    matrix.resize(size, std::vector<T>(size, 0)); // Инициализируем матрицу нулями
+
+    // Считываем главную диагональ
+    for (int i = 0; i < size; ++i) {
+        inFile >> matrix[i][i]; // Считываем главную диагональ
+    }
+
+    // Считываем верхние и нижние диагонали
+    while (!inFile.eof()) {
+        char sign;
+        int offset;
+        inFile >> sign >> offset;
+
+        if (sign == '+') { // Верхняя диагональ
+            for (int i = 0; i < size - offset; ++i) {
+                inFile >> matrix[i][i + offset]; // Считываем верхнюю диагональ
+            }
+        } else if (sign == '-') { // Нижняя диагональ
+            for (int i = offset; i < size; ++i) {
+                inFile >> matrix[i][i - offset]; // Считываем нижнюю диагональ
+            }
+        }
+    }
+
+    inFile.close();
+    return true;
+}
+
+
 
 // Явная специализация для double
 template class MatrixDiagonal<double>;

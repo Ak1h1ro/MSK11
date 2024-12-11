@@ -6,17 +6,22 @@
 #include <random>
 #include <stdexcept>
 #include <type_traits>
+#include <fstream>
+#include <chrono>
 
 template<typename T>
 class MatrixDiagonal {
 public:
     MatrixDiagonal(int size);
+    ~MatrixDiagonal();
     void addLowerDiagonal(int offset);
     void addUpperDiagonal(int offset);
     void fillLowerDiagonalRandom(int offset);
     void fillUpperDiagonalRandom(int offset);
     void fillMainDiagonalRandom();
     void print() const;
+    void exportToFile(const std::string& filename) const; // Экспорт в файл
+    bool importFromFile(const std::string& filename); // Импорт из файла
 
 private:
     int size;

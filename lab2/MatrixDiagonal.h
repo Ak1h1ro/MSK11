@@ -25,6 +25,10 @@ public:
     T& operator()(unsigned i, unsigned j); // Метод доступа к элементам матрицы
     unsigned size() const; // Метод для получения размера матрицы
     MatrixDiagonal<T> kroneckerMultiplication(const MatrixDiagonal<T>& other) const; // Метод для произведения Кронекера двух диагональных матриц
+    MatrixDiagonal<T> scalarMultiply(T scalar) const; // Умножение на скаляр
+    MatrixDiagonal<T> elementWiseMultiply(const MatrixDiagonal<T>& other) const; // Поэлементное умножение
+    MatrixDiagonal<T> operator*(const MatrixDiagonal<T>& other) const; // Матричное умножение
+
 
 private:
     int matrixSize;

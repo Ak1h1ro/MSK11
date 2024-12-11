@@ -235,6 +235,96 @@ MatrixDiagonal<T> MatrixDiagonal<T>::kroneckerMultiplication(const MatrixDiagona
     return result;
 }
 
+// Метод для умножения матрицы на скаляр
+template<typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::scalarMultiply(T scalar) const {
+    MatrixDiagonal<T> result(matrixSize); // Создаем новую матрицу для результата
+
+    for (int i = 0; i < matrixSize; ++i) {
+        result.matrix[i][i] = this->matrix[i][i] * scalar; // Умножаем главную диагональ
+
+        // Умножаем верхние диагонали
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i < matrixSize - offset) {
+                result.matrix[i][i + offset] = this->matrix[i][i + offset] * scalar;
+            }
+        }
+
+        // Умножаем нижние диагонали
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i >= offset) {
+                result.matrix[i][i - offset] = this->matrix[i][i - offset] * scalar;
+            }
+        }
+    }
+
+    return result;
+}
+
+// Метод для поэлементного умножения двух диагональных матриц
+template<typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::elementWiseMultiply(const MatrixDiagonal<T>& other) const {
+    if (matrixSize != other.matrixSize) {
+        throw std::invalid_argument("Размеры матриц должны совпадать для поэлементного умножения.");
+    }
+
+    MatrixDiagonal<T> result(matrixSize); // Создаем новую матрицу для результата
+
+    for (int i = 0; i < matrixSize; ++i) {
+        result.matrix[i][i] = this->matrix[i][i] * other.matrix[i][i]; // Умножаем главную диагональ
+
+        // Умножаем верхние диагонали
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i < matrixSize - offset) {
+                result.matrix[i][i + offset] = this->matrix[i][i + offset] * other.matrix[i][i + offset];
+            }
+        }
+
+        // Умножаем нижние диагонали
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i >= offset) {
+                result.matrix[i][i - offset] = this->matrix[i][i - offset] * other.matrix[i][i - offset];
+            }
+        }
+    }
+
+    return result;
+}
+
+// Метод для матричного умножения двух диагональных матриц
+template<typename T>
+MatrixDiagonal<T> MatrixDiagonal<T>::operator*(const MatrixDiagonal<T>& other) const {
+    if (matrixSize != other.matrixSize) {
+        throw std::invalid_argument("Размеры матриц должны совпадать для матричного умножения.");
+    }
+
+    MatrixDiagonal<T> result(matrixSize); // Создаем новую матрицу для результата
+
+    for (int i = 0; i < matrixSize; ++i) {
+        result.matrix[i][i] = this->matrix[i][i] * other.matrix[i][i]; // Умножаем главную диагональ
+
+        // Умножаем верхние диагонали
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i < matrixSize - offset) {
+                result.matrix[i][i + offset] = this->matrix[i][i + offset] * other.matrix[i][i + offset];
+            }
+        }
+
+        // Умножаем нижние диагонали
+        for (int offset = 1; offset < matrixSize; ++offset) {
+            if (i >= offset) {
+                result.matrix[i][i - offset] = this->matrix[i][i - offset] * other.matrix[i][i - offset];
+            }
+        }
+    }
+
+    return result;
+}
+
+
+
+
+
 
 
 // Явная специализация для double

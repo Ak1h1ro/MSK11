@@ -203,6 +203,8 @@ int main() {
         importedMatrix.print();
 
         MatrixDiagonal<int> matrixB(4);
+        matrixB.addLowerDiagonal(2);
+        matrixB.fillLowerDiagonalRandom(2);
         std::cout << "Integer matrix B:" << std::endl;
         matrixB.print();
 
@@ -214,6 +216,25 @@ int main() {
         std::cout << "size Of Result = " << sizeOfResult << std::endl;
         result.print();
 
+        MatrixDiagonal<int> scaledMatrix = matrixB.scalarMultiply(2);
+        std::cout << "\nThe matrix B after scalar multiplication by 2:" << std::endl;
+        scaledMatrix.print();
+
+        //создадим матрицу С для умножения на матрицу В
+        MatrixDiagonal<int> matrixC(4);
+        matrixC.addLowerDiagonal(2);
+        matrixC.fillLowerDiagonalRandom(2);
+
+        std::cout << "Integer matrix C:" << std::endl;
+        matrixC.print();
+
+        MatrixDiagonal<int> elementWiseResult = matrixC.elementWiseMultiply(matrixB);
+        std::cout << "\nThe result of element wise multiplication:" << std::endl;
+        elementWiseResult.print();
+
+        MatrixDiagonal<int> multipliedResult = matrixC * matrixB;
+        std::cout << "\nThe result of matrix multiplication:" << std::endl;
+        multipliedResult.print();
 
 
     } catch (const std::exception& e) {

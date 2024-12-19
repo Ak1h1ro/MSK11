@@ -88,6 +88,58 @@ void parallelExecutionThread(Vector<int>& vec1, Vector<int>& vec2) {
     std::cout << "Execution time (parallelExecutionThread): " << duration.count() << " seconds\n";
 }
 
+void parallelExecutionOMP(Vector<int>& vec1, Vector<int>& vec2) {
+    auto start = std::chrono::high_resolution_clock::now(); // Начало замера времени
+
+    #pragma omp parallel
+    {
+        #pragma omp single // Обеспечиваем, что только один поток выполняет этот блок
+        {
+            // Параллельное выполнение функций
+            #pragma omp task
+            {
+                auto [minMaxPair1, minMaxPair2] = findMinMax(vec1);
+                auto [minValue, minIndex] = minMaxPair1;
+                auto [maxValue, maxIndex] = minMaxPair2;
+                std::cout << "\nMin: " << minValue << " at index " << minIndex << "\n";
+                std::cout << "Max: " << maxValue << " at index " << maxIndex << "\n";
+            }
+
+            #pragma omp task
+            {
+                double avg = calculateAverage(vec1);
+                std::cout << "\nAverage: " << avg << "\n";
+            }
+
+            #pragma omp task
+            {
+                double sum = SumOfElements(vec1);
+                std::cout << "\nSum: " << sum << "\n";
+            }
+
+            #pragma omp task
+            {
+                double manhattanNorm = calculateManhattanNorm(vec1);
+                std::cout << "\nManhattan Norm: " << manhattanNorm << "\n";
+            }
+
+            #pragma omp task
+            {
+                double euclideanNorm = calculateEuclideanNorm(vec1);
+                std::cout << "\nEuclidean Norm: " << euclideanNorm << "\n";
+            }
+
+            #pragma omp task
+            {
+                double dotProd = dotProduct(vec1, vec2);
+                std::cout << "\nDot Product: " << dotProd << "\n";
+            }
+        } // Конец блока single
+    } // Конец параллельного региона
+    auto end = std::chrono::high_resolution_clock::now(); // Конец замера времени
+    std::chrono::duration<double> duration = end - start; // Вычисляем продолжительность
+    std::cout << "Execution time (parallelExecutionOMP): " << duration.count() << " seconds\n";
+}
 
 
 int main() {
@@ -138,6 +190,11 @@ int main() {
     std::cout<< "--------------------std::thread-------------------------------------"<<"\n" << std::endl;
 
         parallelExecutionThread(vec1, vec2);
+
+    std::cout<< "-------------------------OpenMP--------------------------------------"<<"\n" << std::endl;
+
+        parallelExecutionOMP(vec1, vec2);
+
 
         /*
 

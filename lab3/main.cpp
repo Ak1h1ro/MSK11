@@ -34,6 +34,60 @@ void ExecutionOneThread(Vector<int>& vec1, Vector<int>& vec2) {
     std::cout << "Execution time (One Thread): " << duration.count() << " seconds\n";
 }
 
+      // Параллельное выполнение функций с использованием потоков
+void parallelExecutionThread(Vector<int>& vec1, Vector<int>& vec2) {
+
+    auto start = std::chrono::high_resolution_clock::now(); // Начало замера времени
+
+   std::vector<std::thread> threads;
+
+   threads.emplace_back([&]() {
+        auto [minMaxPair1, minMaxPair2] = findMinMax(vec1);
+        auto [minValue, minIndex] = minMaxPair1;
+        auto [maxValue, maxIndex] = minMaxPair2;
+        std::cout << "Min value: " << minValue << " at index " << minIndex << "\n" << std::endl;;
+        std::cout << "Max value: " << maxValue << " at index " << maxIndex << "\n" << std::endl;;
+    });
+
+   threads.emplace_back([&]() {
+       double avg = calculateAverage(vec1);
+       std::cout << "Average value: " << avg << "\n"<< std::endl;;
+
+   });
+
+   threads.emplace_back([&]() {
+       double sum = SumOfElements(vec1);
+       std::cout << "Sum value: " << sum << "\n"<< std::endl;;
+
+   });
+
+   threads.emplace_back([&]() {
+       double manhattanNorm = calculateManhattanNorm(vec1);
+       std::cout << "Manhattan Norm: " << manhattanNorm << "\n"<< std::endl;;
+
+   });
+
+   threads.emplace_back([&]() {
+       double euclideanNorm = calculateEuclideanNorm(vec1);
+       std::cout << "Euclidean Norm: " << euclideanNorm << "\n"<< std::endl;;
+
+   });
+
+   threads.emplace_back([&]() {
+       double dotProd = dotProduct(vec1, vec2);
+       std::cout << "Dot Product: " << dotProd << "\n"<< std::endl;;
+
+   });
+
+   for (auto& th : threads) {
+       th.join(); // Ожидаем завершения всех потоков
+   }
+
+    auto end = std::chrono::high_resolution_clock::now(); // Конец замера времени
+    std::chrono::duration<double> duration = end - start; // Вычисляем продолжительность
+    std::cout << "Execution time (parallelExecutionThread): " << duration.count() << " seconds\n";
+}
+
 
 
 int main() {
@@ -81,7 +135,9 @@ int main() {
         ExecutionOneThread(vec1,vec2);
 
 
+    std::cout<< "--------------------std::thread-------------------------------------"<<"\n" << std::endl;
 
+        parallelExecutionThread(vec1, vec2);
 
         /*
 

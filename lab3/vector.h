@@ -1,125 +1,124 @@
-
 #ifndef VECTOR_H
 #define VECTOR_H
 
 #include <fstream>
 #include <string>
 #include <stdexcept>
-#include <cstdlib> // Р”Р»СЏ rand() Рё srand()
-#include <ctime>   // Р”Р»СЏ time()
+#include <cstdlib> // Для rand() и srand()
+#include <ctime>   // Для time()
 #include <iostream>
 
 template <typename T>
 class Vector {
 private:
-    T* data;             // РЈРєР°Р·Р°С‚РµР»СЊ РЅР° РґРёРЅР°РјРёС‡РµСЃРєРёР№ РјР°СЃСЃРёРІ
-    size_t n;            // РўРµРєСѓС‰РёР№ СЂР°Р·РјРµСЂ РІРµРєС‚РѕСЂР° (РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ)
-    size_t capacity;     // Р’РјРµСЃС‚РёРјРѕСЃС‚СЊ РІРµРєС‚РѕСЂР°
-    bool is_initialized; // РЎРѕСЃС‚РѕСЏРЅРёРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
+    T* data;             // Указатель на динамический массив
+    size_t n;            // Текущий размер вектора (количество элементов)
+    size_t capacity;     // Вместимость вектора
+    bool is_initialized; // Состояние инициализации
 
 public:
-    Vector(size_t initial_size = 1000); // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
-    ~Vector(); // Р”РµСЃС‚СЂСѓРєС‚РѕСЂ
+    Vector(size_t initial_size = 1000); // Конструктор
+    ~Vector(); // Деструктор
 
-    void initializeWithConstant(const T& value);// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєРѕРЅСЃС‚Р°РЅС‚РѕР№
-    void initializeWithRandomNumbers(T min, T max);// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃР»СѓС‡Р°Р№РЅС‹РјРё С‡РёСЃР»Р°РјРё
-    void push_back(const T& value); // РњРµС‚РѕРґ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р°
-    T& operator[](size_t index); // РћРїРµСЂР°С‚РѕСЂ РґРѕСЃС‚СѓРїР° РїРѕ РёРЅРґРµРєСЃСѓ
-    size_t getSize() const; // РњРµС‚РѕРґ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ С‚РµРєСѓС‰РµРіРѕ СЂР°Р·РјРµСЂР°
+    void initializeWithConstant(const T& value);// Инициализация константой
+    void initializeWithRandomNumbers(T min, T max);// Инициализация случайными числами
+    void push_back(const T& value); // Метод для добавления элемента
+    T& operator[](size_t index); // Оператор доступа по индексу
+    size_t getSize() const; // Метод для получения текущего размера
 
-    void exportToFile(const std::string& filename) const; // Р­РєСЃРїРѕСЂС‚ РґР°РЅРЅС‹С… РІ С„Р°Р№Р»
-    void importFromFile(const std::string& filename); // РРјРїРѕСЂС‚ РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р°
-    const T& operator[](size_t index) const; // РљРѕРЅСЃС‚Р°РЅС‚РЅР°СЏ РІРµСЂСЃРёСЏ РѕРїРµСЂР°С‚РѕСЂР°
+    void exportToFile(const std::string& filename) const; // Экспорт данных в файл
+    void importFromFile(const std::string& filename); // Импорт данных из файла
+    const T& operator[](size_t index) const; // Константная версия оператора
 
 private:
-    void checkInitialization() const; // РњРµС‚РѕРґ РґР»СЏ РїСЂРѕРІРµСЂРєРё СЃРѕСЃС‚РѕСЏРЅРёСЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
+    void checkInitialization() const; // Метод для проверки состояния инициализации
 };
 
-// Р РµР°Р»РёР·Р°С†РёСЏ РјРµС‚РѕРґРѕРІ РєР»Р°СЃСЃР° Vector
+// Реализация методов класса Vector
 
 template <typename T>
 Vector<T>::Vector(size_t initial_size) : data(nullptr), n(0), capacity(initial_size), is_initialized(false) {
-    // РњР°СЃСЃРёРІ РЅРµ РІС‹РґРµР»СЏРµС‚СЃСЏ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ
+    // Массив не выделяется в конструкторе
 }
 
 template <typename T>
 Vector<T>::~Vector() {
-    delete[] data; // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ РїСЂРё СѓРЅРёС‡С‚РѕР¶РµРЅРёРё РѕР±СЉРµРєС‚Р°
+    delete[] data; // Освобождаем память при уничтожении объекта
 }
 
 template <typename T>
 void Vector<T>::initializeWithConstant(const T& value) {
     if (is_initialized) {
-        throw std::runtime_error("Vector is already initialized."); // РСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РІРµРєС‚РѕСЂ СѓР¶Рµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ
+        throw std::runtime_error("Vector is already initialized."); // Исключение, если вектор уже инициализирован
     }
 
-    data = new T[capacity]; // Р’С‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РјР°СЃСЃРёРІ
+    data = new T[capacity]; // Выделяем память под массив
     for (size_t i = 0; i < capacity; ++i) {
-        data[i] = value; // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РєРѕРЅСЃС‚Р°РЅС‚РѕР№
+        data[i] = value; // Инициализируем все элементы константой
     }
 
-    n = capacity; // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С‚РµРєСѓС‰РёР№ СЂР°Р·РјРµСЂ
-    is_initialized = true; // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РІ true
+    n = capacity; // Устанавливаем текущий размер
+    is_initialized = true; // Устанавливаем состояние инициализации в true
 }
 
 template <typename T>
 void Vector<T>::initializeWithRandomNumbers(T min, T max) {
     if (is_initialized) {
-        throw std::runtime_error("Vector is already initialized."); // РСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РІРµРєС‚РѕСЂ СѓР¶Рµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ
+        throw std::runtime_error("Vector is already initialized."); // Исключение, если вектор уже инициализирован
     }
 
-    data = new T[capacity]; // Р’С‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РјР°СЃСЃРёРІ
+    data = new T[capacity]; // Выделяем память под массив
 
-    std::srand(static_cast<unsigned int>(std::time(nullptr))); // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РіРµРЅРµСЂР°С‚РѕСЂ СЃР»СѓС‡Р°Р№РЅС‹С… С‡РёСЃРµР»
+    std::srand(static_cast<unsigned int>(std::time(nullptr))); // Инициализируем генератор случайных чисел
     for (size_t i = 0; i < capacity; ++i) {
-        data[i] = min + (std::rand() % (max - min + 1)); // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј СЃР»СѓС‡Р°Р№РЅС‹РјРё С‡РёСЃР»Р°РјРё РІ Р·Р°РґР°РЅРЅРѕРј РґРёР°РїР°Р·РѕРЅРµ
+        data[i] = min + (std::rand() % (max - min + 1)); // Инициализируем случайными числами в заданном диапазоне
     }
 
-    n = capacity; // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С‚РµРєСѓС‰РёР№ СЂР°Р·РјРµСЂ
-    is_initialized = true; // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РІ true
+    n = capacity; // Устанавливаем текущий размер
+    is_initialized = true; // Устанавливаем состояние инициализации в true
 }
 
 template <typename T>
 void Vector<T>::checkInitialization() const {
     if (!is_initialized) {
-        throw std::runtime_error("Vector is not initialized."); // РСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё РІРµРєС‚РѕСЂ РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ
+        throw std::runtime_error("Vector is not initialized."); // Исключение, если вектор не инициализирован
     }
 }
 
 template <typename T>
 void Vector<T>::push_back(const T& value) {
-    checkInitialization(); // РџСЂРѕРІРµСЂСЏРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїРµСЂРµРґ РІС‹РїРѕР»РЅРµРЅРёРµРј РјРµС‚РѕРґР°
+    checkInitialization(); // Проверяем состояние инициализации перед выполнением метода
 
     if (n >= capacity) {
-        size_t new_capacity = capacity * 2; // РЈРІРµР»РёС‡РёРІР°РµРј РµРјРєРѕСЃС‚СЊ
-        T* new_data = new T[new_capacity]; // РЎРѕР·РґР°РµРј РЅРѕРІС‹Р№ РјР°СЃСЃРёРІ
+        size_t new_capacity = capacity * 2; // Увеличиваем емкость
+        T* new_data = new T[new_capacity]; // Создаем новый массив
 
         for (size_t i = 0; i < n; ++i) {
-            new_data[i] = data[i]; // РљРѕРїРёСЂСѓРµРј СЃС‚Р°СЂС‹Рµ СЌР»РµРјРµРЅС‚С‹ РІ РЅРѕРІС‹Р№ РјР°СЃСЃРёРІ
+            new_data[i] = data[i]; // Копируем старые элементы в новый массив
         }
 
-        delete[] data; // РћСЃРІРѕР±РѕР¶РґР°РµРј СЃС‚Р°СЂС‹Р№ РјР°СЃСЃРёРІ
-        data = new_data; // РџРµСЂРµРЅР°РїСЂР°РІР»СЏРµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅРѕРІС‹Р№ РјР°СЃСЃРёРІ
-        capacity = new_capacity; // РћР±РЅРѕРІР»СЏРµРј РµРјРєРѕСЃС‚СЊ
+        delete[] data; // Освобождаем старый массив
+        data = new_data; // Перенаправляем указатель на новый массив
+        capacity = new_capacity; // Обновляем емкость
     }
 
-    data[n++] = value; // Р”РѕР±Р°РІР»СЏРµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ Рё СѓРІРµР»РёС‡РёРІР°РµРј СЂР°Р·РјРµСЂ
+    data[n++] = value; // Добавляем новый элемент и увеличиваем размер
 }
 
 template <typename T>
 T& Vector<T>::operator[](size_t index) {
-    checkInitialization(); // РџСЂРѕРІРµСЂСЏРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїРµСЂРµРґ РІС‹РїРѕР»РЅРµРЅРёРµРј РјРµС‚РѕРґР°
+    checkInitialization(); // Проверяем состояние инициализации перед выполнением метода
     if (index >= n) {
-        throw std::out_of_range("Index out of range"); // РџСЂРѕРІРµСЂРєР° РЅР° РІС‹С…РѕРґ Р·Р° РїСЂРµРґРµР»С‹
+        throw std::out_of_range("Index out of range"); // Проверка на выход за пределы
     }
 
-    return data[index]; // Р’РѕР·РІСЂР°С‰Р°РµРј СЌР»РµРјРµРЅС‚ РїРѕ РёРЅРґРµРєСЃСѓ
+    return data[index]; // Возвращаем элемент по индексу
 }
 
 template <typename T>
 size_t Vector<T>::getSize() const {
-    checkInitialization(); // РџСЂРѕРІРµСЂСЏРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїРµСЂРµРґ РІС‹РїРѕР»РЅРµРЅРёРµРј РјРµС‚РѕРґР°
-    return n; // Р’РѕР·РІСЂР°С‰Р°РµРј СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ РІРµРєС‚РѕСЂР°
+    checkInitialization(); // Проверяем состояние инициализации перед выполнением метода
+    return n; // Возвращаем размерность вектора
 }
 
 template <typename T>
@@ -131,7 +130,7 @@ void Vector<T>::exportToFile(const std::string& filename) const {
     }
 
     for (size_t i = 0; i < n; ++i) {
-        outFile << data[i] << std::endl; // Р—Р°РїРёСЃС‹РІР°РµРј РєР°Р¶РґС‹Р№ СЌР»РµРјРµРЅС‚ РІ С„Р°Р№Р»
+        outFile << data[i] << std::endl; // Записываем каждый элемент в файл
     }
 
     outFile.close();
@@ -149,26 +148,26 @@ void Vector<T>::importFromFile(const std::string& filename) {
     T value;
 
     n = 0;
-    is_initialized = true; // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РІ true
+    is_initialized = true; // Устанавливаем состояние инициализации в true
 
-    // РРјРїРѕСЂС‚РёСЂСѓРµРј РґР°РЅРЅС‹Рµ РёР· С„Р°Р№Р»Р°, РїРѕРєР° РµСЃС‚СЊ С‡С‚Рѕ С‡РёС‚Р°С‚СЊ.
+    // Импортируем данные из файла, пока есть что читать.
     while (inFile >> value) {
-        push_back(value);  // Р”РѕР±Р°РІР»СЏРµРј СЃС‡РёС‚Р°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РІ РІРµРєС‚РѕСЂ.
+        push_back(value);  // Добавляем считанное значение в вектор.
     }
 
     inFile.close();
     std::cout << "Data successfully imported from " << filename << std::endl;
 }
 
-// Р РµР°Р»РёР·Р°С†РёСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕР№ РІРµСЂСЃРёРё РѕРїРµСЂР°С‚РѕСЂР° []
+// Реализация константной версии оператора []
 template <typename T>
 const T& Vector<T>::operator[](size_t index) const {
-    checkInitialization(); // РџСЂРѕРІРµСЂСЏРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїРµСЂРµРґ РІС‹РїРѕР»РЅРµРЅРёРµРј РјРµС‚РѕРґР°
+    checkInitialization(); // Проверяем состояние инициализации перед выполнением метода
     if (index >= n) {
-        throw std::out_of_range("Index out of range"); // РџСЂРѕРІРµСЂРєР° РЅР° РІС‹С…РѕРґ Р·Р° РїСЂРµРґРµР»С‹
+        throw std::out_of_range("Index out of range"); // Проверка на выход за пределы
     }
 
-    return data[index]; // Р’РѕР·РІСЂР°С‰Р°РµРј СЌР»РµРјРµРЅС‚ РїРѕ РёРЅРґРµРєСЃСѓ
+    return data[index]; // Возвращаем элемент по индексу
 }
 
 

@@ -1,0 +1,6 @@
+SumOfElements: 1300094 microseconds
+calculateAverage: 1278887 microseconds
+calculateEuclideanNorm: 1798247 microseconds
+calculateManhattanNorm: 1268943 microseconds
+dotProduct: 2222170 microseconds
+findMinMax: 1751048 microseconds

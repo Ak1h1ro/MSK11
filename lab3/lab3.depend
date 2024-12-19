@@ -1,0 +1,40 @@
+# depslib dependency file v1.0
+1734606708 source:d:\магистатура_1_курс\Параллельное программирование\lab3\main.cpp
+	"vector.h"
+	"functions.h"
+	"timer.h"
+	"timing_logger.h"
+	<iostream>
+	<vector>
+	<thread>
+	<chrono>
+	<omp.h>
+	<iomanip>
+
+1734512061 d:\магистатура_1_курс\Параллельное программирование\lab3\vector.h
+	<fstream>
+	<string>
+	<stdexcept>
+	<cstdlib>
+	<ctime>
+	<iostream>
+
+1734512160 d:\магистатура_1_курс\Параллельное программирование\lab3\functions.h
+	<iostream>
+	<vector>
+	<algorithm>
+	<utility>
+	<cmath>
+
+1734514474 d:\магистатура_1_курс\Параллельное программирование\lab3\timer.h
+	<iostream>
+	<fstream>
+	<string>
+	<chrono>
+
+1734514486 d:\магистатура_1_курс\Параллельное программирование\lab3\timing_logger.h
+	<iostream>
+	<fstream>
+	<string>
+	<map>
+
